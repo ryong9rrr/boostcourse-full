@@ -1,0 +1,71 @@
+@import "./index.css";
+@import "./aboutme.css";
+@import "./photo.css";
+
+html {
+  height: 120%;
+  background: linear-gradient(to bottom, wheat, rgba(235, 210, 165, 0.5));
+}
+
+body {
+  width: 60%;
+  margin: auto;
+}
+
+a {
+  display: block;
+  text-decoration: none;
+  color: rgb(70, 69, 69);
+}
+
+a:hover {
+  font-weight: 800;
+}
+
+header,
+section,
+footer {
+  background-color: white;
+  margin-top: 10px;
+}
+
+header,
+footer {
+  height: 80px;
+}
+
+header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+ul > li {
+  text-align: center;
+  font-size: 14px;
+  display: inline-block;
+  background-color: wheat;
+  border-radius: 2px;
+  box-shadow: 2px 2px 2px rgba(117, 99, 64, 0.5);
+  text-decoration: none;
+}
+
+section {
+  padding: 10px 0px;
+}
+
+article {
+  margin-top: 10px;
+}
