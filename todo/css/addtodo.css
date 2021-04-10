@@ -63,12 +63,6 @@ label {
   font-weight: 800;
 }
 
-.addtodo-btns {
-  width: 45%;
-  display: flex;
-  justify-content: space-between;
-}
-
 #addtodo-btn {
   margin-left: 20px;
   all: unset;
