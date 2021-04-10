@@ -11,7 +11,7 @@
 
 ### #1. 디렉토리 구조
 
-<img src="./img/구조.png" />
+<img src="./readmeImg/구조.png" />
 
 ### #2. 개발환경세팅
 
