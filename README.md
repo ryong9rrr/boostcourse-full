@@ -17,6 +17,7 @@
 - #4. mysql
 - #5. DTO (Data Transfer Object)
 - #6. DAO (Data Access Object)
+- #7. SELECT TODOS, DOINGS, DONES
 
 ---
 
@@ -267,3 +268,13 @@
   - dburl = "jdbc:mysql://localhost:3306/데이터베이스이름?useSSL=false"
 
   - `Class.forName("com.mysql.cj.jdbc.Driver");`
+
+### #7. SELECT TODOS, DOINGS, DONES
+
+나중에 table 지웠다가 다시만들어야함(배열이 커져버림), 또 나중에 쿼리문에 ORDER BY 로 오름차순 해줄 것.
+
+- 앞으로 해야할 것
+
+  - 할 일 등록 : INSERT 로 table 추가하는 쿼리
+  - TODO - DOING - DONE : UPDATE로 table 상태 바꾸는 쿼리
+  - 삭제 : DONE 상태가 되면 삭제할 수 있는 버튼이 생기고, 테이블을 삭제하는 쿼리를 만들자.
