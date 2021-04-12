@@ -18,6 +18,8 @@
 - #5. DTO (Data Transfer Object)
 - #6. DAO (Data Access Object)
 - #7. SELECT TODOS, DOINGS, DONES
+- #8. JSP LifeCycle
+- #9. JSP LifeCycle을 이용한 동작설계
 
 ---
 
@@ -179,6 +181,13 @@
 
   `INSERT into todo (title, name, sequence) values ("java공부", "상윤", "1");`
 
+- id가 100인 데이터 삭제
+  `DELETE FROM todo where id=100;`
+
+- id가 1인 데이터 "DOING" 으로 "type" 업데이트
+
+  `UPDATE todo SET type = "DOING" WHERE id = 1;`
+
 - 데이터 확인, 추가, 삭제
 
   `SELECT * FROM todo;`
@@ -278,3 +287,37 @@
   - 할 일 등록 : INSERT 로 table 추가하는 쿼리
   - TODO - DOING - DONE : UPDATE로 table 상태 바꾸는 쿼리
   - 삭제 : DONE 상태가 되면 삭제할 수 있는 버튼이 생기고, 테이블을 삭제하는 쿼리를 만들자.
+
+### #8. JSP LifeCycle
+
+```
+<%
+	System.out.println("_jspService()");
+%>
+
+<%!
+public void jspInit() {
+	System.out.println("jspInit()!");
+}
+
+public void jspDestroy() {
+	System.out.println("jspDestroy()");
+}
+%>
+```
+
+- 클라이언트에 처음 접속
+
+  - init - service 순으로 동작
+
+- 새로고침
+
+  - service만 동작
+
+- dom 변경 시
+  - destory - init - service 순으로 동작
+
+### #9. JSP LifeCycle을 이용한 동작설계
+
+- 처음 클라이언트가 서버에 접속
+  1. init 에서는 모든 데이터를 가져와서 dom을 생성한다.
