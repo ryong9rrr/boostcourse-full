@@ -317,7 +317,17 @@ public void jspDestroy() {
 - dom 변경 시
   - destory - init - service 순으로 동작
 
-### #9. JSP LifeCycle을 이용한 동작설계
+### #9. 동작설계
 
-- 처음 클라이언트가 서버에 접속
-  1. init 에서는 모든 데이터를 가져와서 dom을 생성한다.
+옆으로 옮기는 버튼이 DONE에서는 휴지통으로 바뀐다. (css이용) done 부분 클래스명 바꾸면 좋을듯?
+
+**한글깨짐방지**
+
+```
+//request
+request.setCharacterEncoding("UTF-8");
+//response
+response.setContentType("text/html; charset=UTF-8");
+```
+
+다음으로 할 것 : 옆으로 옮기기 버튼
