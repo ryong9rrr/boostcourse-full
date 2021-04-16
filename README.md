@@ -331,3 +331,5 @@ response.setContentType("text/html; charset=UTF-8");
 ```
 
 다음으로 할 것 : 옆으로 옮기기 버튼
+
+Form 안에 submit을 만들고 - JS는 DOM이 클릭되면 클릭된 DOM은 사라지게하고 - post로 서블릿에 ID와함께 요청을 보낸다 - 서블릿은 요청을 받아 db를 업데이트하고 - jsonAPI를 만든다 - js는 비동기로 응답을 받아 실행하고 - DOM을 생성한다.
