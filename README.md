@@ -20,6 +20,7 @@
 - #7. SELECT TODOS, DOINGS, DONES
 - #8. JSP LifeCycle
 - #9. JSP LifeCycle을 이용한 동작설계
+- #Error
 
 ---
 
@@ -33,57 +34,85 @@
 
 ### #2. 개발환경세팅
 
-#### #2.1. maven 프로젝트 생성
+# 📖 목차
 
-1. File - new - maven - Filter > org.apache.maven.archetypes
+- JAVA WAS
+- 디렉토리 구조
+- 개발환경세팅
 
-- groupId
+---
 
-  - groupId는 당신의 프로젝트를 모든 프로젝트 사이에서 고유하게 식별하게 해 주는 것이다.
+# 1. JAVA WAS
 
-  - 따라서, groupId에는 네이밍 스키마를 적용하도록 한다.
+![](https://images.velog.io/images/ryong9rrr/post/9cb5fb92-d1d0-4a02-bf57-759dae70cf3d/javaWAS.png)
 
-    - groupId는 package 명명 규칙을 따르도록 한다.
-    - 즉, 최소한 당신이 컨트롤하는 도메인 네임이어야 한다.
-    - 하위 그룹은 얼마든지 추가할 수 있다.
-    - 예: `org.apache.maven` , `org.apache.commons`
+# 2. 디렉토리 구조
 
-  - 프로젝트 구조를 사용하면 잘 구분되는 groupId를 만들 수 있다.
+![](https://images.velog.io/images/ryong9rrr/post/d79b42ed-8960-47f6-843c-5b1702425da1/%EA%B5%AC%EC%A1%B0.png)
 
-    - 현재 프로젝트가 다중 모듈 프로젝트라면, 부모 groupId에 현재 프로젝트의 식별자를 추가하는 방식.
+# 3. 개발환경세팅
 
-    - 예: `org.apache.maven` , `org.apache.maven.plugins` , `org.apache.maven.reporting`
+## maven project
 
-- artifactId
+File - new - maven - Filter에서 `org.apache.maven.archetypes` 에서 선택한다.
 
-  - artifactId는 버전 정보를 생략한 `jar`파일의 이름이다.
+### groupId, artifactId 네이밍
 
-    - 이름은 원하는 것으로 아무거나 정해도 괜찮다.
-    - 단, 소문자로만 작성할 것.
-    - 단, 특수문자는 사용하지 않는다.
+#### groupId
 
-  - 만약 써드 파티 `jar` 파일이라면, 할당된 이름을 사용해야 한다.
+- groupId는 당신의 프로젝트를 모든 프로젝트 사이에서 고유하게 식별하게 해 주는 것이다.
 
-    - 예: `maven` , `commons-math`
+- 따라서, groupId에는 네이밍 스키마를 적용하도록 한다.
 
-2. 만들고 main폴더 아래에 java, resources 폴더 생성
+  - groupId는 package 명명 규칙을 따르도록 한다.
+  - 즉, 최소한 당신이 컨트롤하는 도메인 네임이어야 한다.
+  - 하위 그룹은 얼마든지 추가할 수 있다.
+  - 예: `org.apache.maven` , `org.apache.commons`
 
-3. 개발환경세팅
+- 프로젝트 구조를 사용하면 잘 구분되는 groupId를 만들 수 있다.
 
-- pom.xml
+  - 현재 프로젝트가 다중 모듈 프로젝트라면, 부모 groupId에 현재 프로젝트의 식별자를 추가하는 방식.
 
-  ```
+  - 예: `org.apache.maven` , `org.apache.maven.plugins` , `org.apache.maven.reporting`
+
+#### artifactId
+
+- artifactId는 버전 정보를 생략한 `jar`파일의 이름이다.
+
+  - 이름은 원하는 것으로 아무거나 정해도 괜찮다.
+  - 단, 소문자로만 작성할 것.
+  - 단, 특수문자는 사용하지 않는다.
+
+- 만약 써드 파티 `jar` 파일이라면, 할당된 이름을 사용해야 한다.
+
+  - 예: `maven` , `commons-math`
+
+### pom.xml
+
+maven을 사용하는 가장 큰 이유. 필요한 라이브러리를 편리하게 추가 할 수 있다. 추가한 후에는 꼭 maven update를 한다. (art + F5)
+
+### jst 버전 업그레이드
+
+jstl 이나 EL 구문을 사용하고, servlet을 제대로 동작시키기 위해서는
+Dynamic web module의 버전이 2.4 이상이어야 한다. 버전이 낮다면 업그레이드를 해줘야함.
+
+1. **pom.xml** 에 아래와 같이 필요한 라이브러리를 추가한다.
+
+```
+  <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.1</version>
+      <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+      </configuration>
+  </plugin>
+
   <properties>
     <!-- web.xml 파일을 삭제해도 eclipse에서 오류가 발생하지 않는다. -->
     <failOnMissingWebXml>false</failOnMissingWebXml>
   </properties>
-
-  <!-- mysql과 같은 version으로 -->
-  <dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <version>8.0.23</version>
-  </dependency>
 
   <!-- json 라이브러리 databind jackson-core, jackson-annotaion에 의존성이 있다. -->
   <dependency>
@@ -105,41 +134,29 @@
     <version>1.2</version>
   </dependency>
 
-
-  ```
-
-### #3. jst 버전 업그레이드
-
-- web.xml 수정
-
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
-  <display-name>Archetype Created Web Application</display-name>
-</web-app>
+  <!-- mysql과 같은 version으로 -->
+  <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.23</version>
+  </dependency>
 
 ```
 
-- org.elclipse.wst.common.project.facet.core.xml<br /> jst 👉 3.1 로 변경
+2. `<failOnMissingWebXml>false</failOnMissingWebXml>` 을 추가함으로 `web.xml`은 삭제해도 괜찮다.
+   추가하지 않는다면 **web.xml**의 코드를 아래와 같이 변경한다.
+   **web.xml**
+   ```
+   <?xml version="1.0" encoding="UTF-8"?>
+   <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+     <display-name>Archetype Created Web Application</display-name>
+   </web-app>
+   ```
+3. `org.elclipse.wst.common.project.facet.core.xml`
+   jst 👉 3.1 로 변경
 
-- pom/xml 에 플러그인 추가
-
-```
-
-  <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.1</version>
-      <configuration>
-        <source>1.8</source>
-        <target>1.8</target>
-      </configuration>
-    </plugin>
-  </plugins>
-
-```
+4. maven update 후 이클립스 재시작
 
 ### #4. mysql
 
@@ -317,21 +334,28 @@ public void jspDestroy() {
 - dom 변경 시
   - destory - init - service 순으로 동작
 
-### #9. 동작설계
+### #9. MVC 로 생각해보기
 
-옆으로 옮기는 버튼이 DONE에서는 휴지통으로 바뀐다. (css이용) done 부분 클래스명 바꾸면 좋을듯?
+1. todoweb/main 에 접속한다.
+2. controller MainServlet은 db에 있는 data들을 가져와서
+3. view인 main.jsp 에 넘겨주고 main.jsp는 data들을 이용해 DOM을 생성한다.
+4. db에 있는 data들을 가져올 때, TodoDto, TodoDao를 이용한 model이 있어야한다.
+5. 할 일 추가 버튼을 누르면 단순히 페이지가 이동한다.
+6. form에 값 들을 모두 담고 제출을 누르면 newTodoServlet으로 값 들이 전송되고 mainServlet으로 리다이렉트 된다. (동기적이므로 dom제어는 필요 없을 듯)
+7. 옮기기 버튼을 누르면 updateServlet이 해당 dom의 id를 인자로 받아서 상태를 update 시키고 그 결과를 json으로 만든다.
+8. 옮기기 버튼을 눌러서 7의 결과가 잘 전송이 되면 클릭한 dom을 js로 없애고 결과인 json 데이터를 이용해서 dom을 생성한다.
 
-**한글깨짐방지**
+---
 
-```
-//request
-request.setCharacterEncoding("UTF-8");
-//response
-response.setContentType("text/html; charset=UTF-8");
-```
+# #Error
 
-다음으로 할 것 : 옆으로 옮기기 버튼
+- `Before start of result set` : rs.next() 안했을 때
 
-Form 안에 submit을 만들고 - JS는 DOM이 클릭되면 클릭된 DOM은 사라지게하고 - post로 서블릿에 ID와함께 요청을 보낸다 - 서블릿은 요청을 받아 db를 업데이트하고 - jsonAPI를 만든다 - js는 비동기로 응답을 받아 실행하고 - DOM을 생성한다.
+- **한글깨짐방지**
 
-delete랑 update 테스트하려고 getOneofall 하나 만드는중...
+  ```
+  //request
+  request.setCharacterEncoding("UTF-8");
+  //response
+  response.setContentType("text/html; charset=UTF-8");
+  ```
