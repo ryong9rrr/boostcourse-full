@@ -1,0 +1,18 @@
+@import "./reset.css";
+@import "./variables.css";
+@import "./main.css";
+@import "./todoForm.css";
+
+body {
+  padding: 20px;
+  background-color: gray;
+}
+
+.app {
+  height: 100%;
+  width: 80%;
+  margin: auto;
+  background-color: white;
+  padding: 2rem 1rem;
+  border-radius: 5px;
+}
