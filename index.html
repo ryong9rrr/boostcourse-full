@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/css/index.css" />
+    <title>✔ 할 일을 적어봐요!</title>
+  </head>
+  <body>
+    <div id="root" class="bg-base">
+      <div id="app" class="shadow bg-yellow border-radius-10">
+        <header>
+          <h1 class="text-center">✔ To Do List</h1>
+        </header>
+        <main>
+          <form class="flex justify-center align-center">
+            <label for="todo" hidden>할 일이 무엇인가요?</label>
+            <input
+              id="form-input"
+              name="todo"
+              class="border-gray text-m text-center border-radius-10"
+              type="text"
+              placeholder="할 일이 무엇인가요?"
+              autocomplete="off"
+            />
+            <button
+              id="btn-add"
+              class="bg-green border-radius-10 p-10 text-m text-white"
+              type="button"
+              name="submit"
+            >
+              추가
+            </button>
+          </form>
+          <div class="flex">
+            <section class="width-divide-3 pl-20">
+              <h2>Todo</h2>
+              <ul id="list-todo">
+                <!--
+                  <li>
+                    <span>${할 일}</span>
+                    <button>▶</button>
+                  </li>
+                -->
+                <li>
+                  <span>노드JS서버 만들기</span>
+                  <button>▶</button>
+                </li>
+                <li><span>노드JS서버 만들기</span><button>▶</button></li>
+                <li><span>노드JS서버 만들기</span><button>▶</button></li>
+              </ul>
+            </section>
+            <section class="width-divide-3 pl-20">
+              <h2>Doing</h2>
+              <ul id="list-doing">
+                <!--
+                  <li>
+                    <span>${할 일}</span>
+                    <button>▶</button>
+                  </li>
+                -->
+                <li><span>html/css 레이아웃 만들기</span><button>▶</button></li>
+                <li><span>노드JS서버 만들기</span><button>▶</button></li>
+              </ul>
+            </section>
+            <section class="width-divide-3 pl-20">
+              <h2>Done</h2>
+              <ul id="list-done">
+                <!--
+                  <li>
+                    <span>${할 일}</span>
+                    <button>❌</button>
+                  </li>
+                -->
+                <li><span>알고리즘 공부하기</span><button>❌</button></li>
+              </ul>
+            </section>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+  <script src="./src/index.js"></script>
+</html>
