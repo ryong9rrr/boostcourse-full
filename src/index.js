@@ -6,8 +6,16 @@ const store = {
   dones: [],
 };
 
+function getNextType(currentType) {
+  const types = {
+    ["todos"]: "doings",
+    ["doings"]: "dones",
+  };
+  return types[currentType];
+}
+
 function getHTMLElementData($li) {
-  const getType = (dataset) => {
+  const parseType = (dataset) => {
     const types = {
       ["todoId"]: "todos",
       ["doingId"]: "doings",
@@ -16,17 +24,17 @@ function getHTMLElementData($li) {
     return types[dataset];
   };
   const dataSet = Object.keys($li.dataset)[0];
-  const type = getType(dataSet);
+  const type = parseType(dataSet);
   const id = Number($li.dataset[`${dataSet}`]);
   return { type, id };
 }
 
-function updateTodoList() {
+function makeTodosHtml() {
   const todosHtmlTemplate = store.todos
     .map((todo, index) => {
       return `
     <li data-todo-id="${index}"
-    class="mb-3 border-4 border-solid border-stone-500 p-2 bg-green-300 shadow-md"
+    class="mb-3 border-4 border-solid border-stone-500 p-2 bg-yellow-200 shadow-md"
     >
     <span class="font-semibold">${todo}</span>
     <button
@@ -51,7 +59,7 @@ function updateTodoList() {
   return todosHtmlTemplate;
 }
 
-function updateDoingList() {
+function makeDoingsHtml() {
   const doingsHtmlTemplate = store.doings
     .map((doing, index) => {
       return `
@@ -81,12 +89,12 @@ function updateDoingList() {
   return doingsHtmlTemplate;
 }
 
-function updateDoneList() {
+function makeDonesHtml() {
   const donesHtmlTemplate = store.dones
     .map((done, index) => {
       return `
         <li data-done-id="${index}"
-            class="mb-3 border-4 border-solid border-stone-500 p-2 bg-blue-300 shadow-md"
+            class="mb-3 border-4 border-solid border-stone-500 p-2 bg-pink-200 shadow-md"
         >
             <span class="font-semibold">${done}</span>
             <button
@@ -109,9 +117,9 @@ function render() {
   }
 
   renderCount();
-  $("#list-todos").innerHTML = updateTodoList();
-  $("#list-doings").innerHTML = updateDoingList();
-  $("#list-dones").innerHTML = updateDoneList();
+  $("#list-todos").innerHTML = makeTodosHtml();
+  $("#list-doings").innerHTML = makeDoingsHtml();
+  $("#list-dones").innerHTML = makeDonesHtml();
   return;
 }
 
@@ -124,21 +132,32 @@ function editList($li) {
   return render();
 }
 
-function moveList(e) {
-  console.log("이동");
+function moveList($li) {
+  if (confirm("완료했나요?")) {
+    const text = $li.querySelector("span").textContent;
+    const { type, id } = getHTMLElementData($li);
+    const nextType = getNextType(type);
+    store[`${type}`].splice(id, 1);
+    store[`${nextType}`].push(text);
+    return render();
+  }
   return;
 }
 
-function removeList(e) {
-  console.log("삭제");
+function removeList($li) {
+  if (confirm("삭제할까요?")) {
+    const { type, id } = getHTMLElementData($li);
+    store[`${type}`].splice(id, 1);
+    return render();
+  }
   return;
 }
 
 function listBtnsEventHandler(e) {
   const $li = e.target.closest("li");
   if (e.target.classList.contains("btn-edit")) editList($li);
-  if (e.target.classList.contains("btn-next")) moveList(e);
-  if (e.target.classList.contains("btn-remove")) removeList(e);
+  if (e.target.classList.contains("btn-next")) moveList($li);
+  if (e.target.classList.contains("btn-remove")) removeList($li);
 }
 
 function addList() {
