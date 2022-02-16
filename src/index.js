@@ -164,7 +164,7 @@ function addList() {
   const newTodo = $("#to-do-form-input").value;
   // 사용자 행동 예외처리
   if (newTodo === "") {
-    return alert("값을 입력해 주세요.");
+    return alert("할 일을 입력해 주세요.");
   }
 
   $("#to-do-form-input").value = "";
