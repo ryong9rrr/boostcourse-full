@@ -151,7 +151,7 @@ describe("투 두 앱 테스트", () => {
     cy.get("#list-doings li .btn-remove").first().click();
     cy.get("#list-dones li .btn-remove").first().click();
 
-    // 새로고침 => 개수 맞는지 확인
+    cy.reload();
 
     checkCount("todo", 1);
     checkCount("doing", 1);

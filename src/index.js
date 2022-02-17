@@ -1,10 +1,27 @@
 const $ = (selector) => document.querySelector(selector);
 
+const storage = {
+  setLocalStorage(store) {
+    localStorage.setItem("data", JSON.stringify(store));
+  },
+
+  getLocalStorage() {
+    return JSON.parse(localStorage.getItem("data"));
+  },
+};
+
 const store = {
   todos: [],
   doings: [],
   dones: [],
 };
+
+if (storage.getLocalStorage()) {
+  const data = storage.getLocalStorage();
+  for (const key in data) {
+    data[key].forEach((v) => store[key].push(v));
+  }
+}
 
 function getNextType(currentType) {
   const types = {
@@ -129,6 +146,7 @@ function editList($li) {
   const updatedText = prompt("할 일을 수정할까요?", prevText) || prevText;
   const { type, id } = getHTMLElementData($li);
   store[`${type}`][id] = updatedText;
+  storage.setLocalStorage(store);
   return render();
 }
 
@@ -139,6 +157,7 @@ function moveList($li) {
     const nextType = getNextType(type);
     store[`${type}`].splice(id, 1);
     store[`${nextType}`].push(text);
+    storage.setLocalStorage(store);
     return render();
   }
   return;
@@ -148,6 +167,7 @@ function removeList($li) {
   if (confirm("삭제할까요?")) {
     const { type, id } = getHTMLElementData($li);
     store[`${type}`].splice(id, 1);
+    storage.setLocalStorage(store);
     return render();
   }
   return;
@@ -169,6 +189,7 @@ function addList() {
 
   $("#to-do-form-input").value = "";
   store.todos.push(newTodo);
+  storage.setLocalStorage(store);
   return render();
 }
 
@@ -186,3 +207,4 @@ function App() {
 }
 
 App();
+render();
