@@ -6,7 +6,7 @@
 
 (테스트 중인 모습)
 
-👋 [프로젝트 링크](#)
+👋 [프로젝트 링크](https://ryong9rrr.github.io/projects/to-do-list/)
 
 <table>
     <thead>
