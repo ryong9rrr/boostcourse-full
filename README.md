@@ -19,11 +19,15 @@
     <tbody>
         <tr>
             <td style="text-align: center">Language</td>
-            <td>Vanilla JS</td>
+            <td>Vanilla JS | TypeScript</td>
         </tr>
         <tr>
             <td style="text-align: center">Style & Layout</td>
             <td>HTML / TailWind CSS</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">Bundler</td>
+            <td>parcel</td>
         </tr>
         <tr>
             <td style="text-align: center">Test</td>
@@ -35,7 +39,7 @@
         </tr>
         <tr>
             <td style="text-align: center">keywords</td>
-            <td><strong>Vanilla JS</strong> | <strong>TailWind CSS</strong> | <strong>Web API</strong> | <strong>DOM API</strong> | <strong>상태관리</strong> | <strong>로컬스토리지</strong> | <strong>AJAX</strong></td>
+            <td><strong>Vanilla JS</strong> | <strong>TypeScript</strong> | <strong>TailWind CSS</strong> | <strong>Web API</strong> | <strong>DOM API</strong> | <strong>상태관리</strong> | <strong>로컬스토리지</strong> | <strong>AJAX</strong></td>
         </tr>
     </tbody>
 </table>
