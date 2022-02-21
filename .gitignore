@@ -4,3 +4,7 @@ cypress/fixtures
 cypress/integration/*/
 cypress/plugins
 cypress/support
+
+/dist/
+
+/.cache/
