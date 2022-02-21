@@ -1,54 +1,102 @@
 // utils
 const $ = (selector) => document.querySelector(selector);
 
-function getNextType(currentType) {
-  const types = {
-    ["todos"]: "doings",
-    ["doings"]: "dones",
-  };
-  return types[currentType];
-}
-
-function getHTMLElementData($li) {
-  const parseType = (dataset) => {
-    const types = {
-      ["todoId"]: "todos",
-      ["doingId"]: "doings",
-      ["doneId"]: "dones",
-    };
-    return types[dataset];
-  };
-  const dataSet = Object.keys($li.dataset)[0];
-  const type = parseType(dataSet);
-  const id = Number($li.dataset[`${dataSet}`]);
-  return { type, id };
-}
-
-// api
-const storage = {
-  setLocalStorage(store) {
-    localStorage.setItem("data", JSON.stringify(store));
-  },
-
-  getLocalStorage() {
-    return JSON.parse(localStorage.getItem("data"));
-  },
-};
-
-class App {
+class Store {
+  #items;
   constructor() {
-    this.store = {
+    this.#items = {
       todos: [],
       doings: [],
       dones: [],
     };
-
-    if (storage.getLocalStorage()) {
-      const data = storage.getLocalStorage();
-      for (const key in data) {
-        data[key].forEach((v) => this.store[key].push(v));
+    const prevData = this.getLocalStorage();
+    if (prevData) {
+      for (const key in prevData) {
+        prevData[key].forEach((v) => this.#items[key].push(v));
       }
     }
+  }
+
+  #getNextType(currentType) {
+    const types = {
+      ["todos"]: "doings",
+      ["doings"]: "dones",
+    };
+    return types[currentType];
+  }
+
+  get items() {
+    return this.#items;
+  }
+
+  get todos() {
+    return this.#items.todos;
+  }
+
+  get doings() {
+    return this.#items.doings;
+  }
+
+  get dones() {
+    return this.#items.dones;
+  }
+
+  get todosLength() {
+    return this.#items.todos.length;
+  }
+
+  get doingsLength() {
+    return this.#items.doings.length;
+  }
+
+  get donesLength() {
+    return this.#items.dones.length;
+  }
+
+  addItem(newItem) {
+    this.#items.todos.push(newItem);
+  }
+
+  removeItem(type, targetId) {
+    this.#items[`${type}`].splice(targetId, 1);
+  }
+
+  moveItem(type, targetId, text) {
+    this.#items[`${type}`].splice(targetId, 1);
+    this.#items[`${this.#getNextType(type)}`].push(text);
+  }
+
+  editItem(type, targetId, updatedText) {
+    this.#items[`${type}`][targetId] = updatedText;
+  }
+
+  setLocalStorage() {
+    localStorage.setItem("data", JSON.stringify(this.#items));
+  }
+
+  getLocalStorage() {
+    return JSON.parse(localStorage.getItem("data"));
+  }
+}
+
+class App {
+  constructor(store) {
+    this.store = store;
+  }
+
+  #getHTMLElementData($li) {
+    const parseType = (dataset) => {
+      const types = {
+        ["todoId"]: "todos",
+        ["doingId"]: "doings",
+        ["doneId"]: "dones",
+      };
+      return types[dataset];
+    };
+    const dataSet = Object.keys($li.dataset)[0];
+    const type = parseType(dataSet);
+    const id = Number($li.dataset[`${dataSet}`]);
+    return { type, id };
   }
 
   run() {
@@ -80,12 +128,13 @@ class App {
   }
 
   renderCount() {
-    $("#todo-count").innerHTML = `${this.store.todos.length} 개`;
-    $("#doing-count").innerHTML = `${this.store.doings.length} 개`;
-    $("#done-count").innerHTML = `${this.store.dones.length} 개`;
+    $("#todo-count").innerHTML = `${this.store.todosLength} 개`;
+    $("#doing-count").innerHTML = `${this.store.doingsLength} 개`;
+    $("#done-count").innerHTML = `${this.store.donesLength} 개`;
   }
 
   render() {
+    this.store.setLocalStorage();
     this.renderCount();
     $("#list-todos").innerHTML = this.makeTodosHtml();
     $("#list-doings").innerHTML = this.makeDoingsHtml();
@@ -100,16 +149,14 @@ class App {
     }
 
     $("#to-do-form-input").value = "";
-    this.store.todos.push(newTodo);
-    storage.setLocalStorage(this.store);
+    this.store.addItem(newTodo);
     return this.render();
   }
 
   removeList($li) {
     if (confirm("삭제할까요?")) {
-      const { type, id } = getHTMLElementData($li);
-      this.store[`${type}`].splice(id, 1);
-      storage.setLocalStorage(this.store);
+      const { type, id } = this.#getHTMLElementData($li);
+      this.store.removeItem(type, id);
       return this.render();
     }
     return;
@@ -118,11 +165,8 @@ class App {
   moveList($li) {
     if (confirm("완료했나요?")) {
       const text = $li.querySelector("span").textContent;
-      const { type, id } = getHTMLElementData($li);
-      const nextType = getNextType(type);
-      this.store[`${type}`].splice(id, 1);
-      this.store[`${nextType}`].push(text);
-      storage.setLocalStorage(this.store);
+      const { type, id } = this.#getHTMLElementData($li);
+      this.store.moveItem(type, id, text);
       return this.render();
     }
     return;
@@ -132,9 +176,8 @@ class App {
     const $span = $li.querySelector("span");
     const prevText = $span.textContent;
     const updatedText = prompt("할 일을 수정할까요?", prevText) || prevText;
-    const { type, id } = getHTMLElementData($li);
-    this.store[`${type}`][id] = updatedText;
-    storage.setLocalStorage(this.store);
+    const { type, id } = this.#getHTMLElementData($li);
+    this.store.editItem(type, id, updatedText);
     return this.render();
   }
 
@@ -219,5 +262,6 @@ class App {
   }
 }
 
-const app = new App();
+const store = new Store();
+const app = new App(store);
 app.run();
