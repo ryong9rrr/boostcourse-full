@@ -2,8 +2,9 @@
 const $ = (selector) => document.querySelector(selector);
 
 //template
-const todoTemplate = (text, id) => `
-  <li data-todo-id="${id}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-yellow-200 shadow-md">
+
+const todoTemplate = (text, idx) => `
+  <li data-todo-id="${idx}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-yellow-200 shadow-md">
     <span class="font-semibold">${text}</span>
     <button class="btn-edit bg-gray-200 px-2 border-2 border-solid border-yellow-500 rounded-md hover:bg-yellow-500">
       <i class="btn-edit fa-solid fa-pen"></i>
@@ -16,8 +17,8 @@ const todoTemplate = (text, id) => `
     </button>
   </li>`;
 
-const doingTemplate = (text, id) => `
-  <li data-doing-id="${id}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-green-300 shadow-md">
+const doingTemplate = (text, idx) => `
+  <li data-doing-id="${idx}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-green-300 shadow-md">
     <span class="font-semibold">${text}</span>
     <button class="btn-edit bg-gray-200 px-2 border-2 border-solid border-yellow-500 rounded-md hover:bg-yellow-500">
       <i class="btn-edit fa-solid fa-pen"></i>
@@ -30,8 +31,8 @@ const doingTemplate = (text, id) => `
     </button>
   </li>`;
 
-const doneTemplate = (text, id) => `
-  <li data-done-id="${id}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-pink-200 shadow-md">
+const doneTemplate = (text, idx) => `
+  <li data-done-id="${idx}" class="mb-3 border-4 border-solid border-stone-500 p-2 bg-pink-200 shadow-md">
     <span class="font-semibold">${text}</span>
     <button class="btn-remove bg-gray-200 px-2 border-2 border-solid border-red-700 rounded-md hover:bg-red-500">
       <i class="btn-remove fa-solid fa-xmark"></i>
@@ -39,61 +40,87 @@ const doneTemplate = (text, id) => `
   </li>
 `;
 
-// api
-class Api {
+class Store {
+  #items;
   constructor() {
-    this.BASE_URL = "http://localhost:3000";
+    this.#items = {
+      todos: [],
+      doings: [],
+      dones: [],
+    };
+    const prevData = this.getLocalStorage();
+    if (prevData) {
+      for (const key in prevData) {
+        prevData[key].forEach((v) => this.#items[key].push(v));
+      }
+    }
   }
 
-  async getItems() {
-    const response = await fetch(`${this.BASE_URL}/items`);
-    return response.json();
+  #getNextType(currentType) {
+    const types = {
+      ["todos"]: "doings",
+      ["doings"]: "dones",
+    };
+    return types[currentType];
   }
 
-  async createItem(text) {
-    const response = await fetch(`${this.BASE_URL}/items`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-    if (!response.ok) console.error("할 일을 추가하는데 에러가 발생했어요.");
-    return response.json();
+  get items() {
+    return this.#items;
   }
 
-  async editItem(text, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-    if (!response.ok) console.error("할 일을 수정하는데 에러가 발생했어요.");
-    return response.json();
+  get todos() {
+    return this.#items.todos;
   }
 
-  async moveItem(category, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${category}/${id}`, {
-      method: "PUT",
-    });
-    if (!response.ok) console.error("할 일을 옮기는데 에러가 발생했어요.");
-    return response.json();
+  get doings() {
+    return this.#items.doings;
   }
 
-  async deleteItem(category, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${category}/${id}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) console.error("할 일을 삭제하는데 에러가 발생했어요.");
+  get dones() {
+    return this.#items.dones;
+  }
+
+  get todosLength() {
+    return this.#items.todos.length;
+  }
+
+  get doingsLength() {
+    return this.#items.doings.length;
+  }
+
+  get donesLength() {
+    return this.#items.dones.length;
+  }
+
+  addItem(newItem) {
+    this.#items.todos.push(newItem);
+  }
+
+  removeItem(type, targetId) {
+    this.#items[`${type}`].splice(targetId, 1);
+  }
+
+  moveItem(type, targetId, text) {
+    this.#items[`${type}`].splice(targetId, 1);
+    this.#items[`${this.#getNextType(type)}`].push(text);
+  }
+
+  editItem(type, targetId, updatedText) {
+    this.#items[`${type}`][targetId] = updatedText;
+  }
+
+  setLocalStorage() {
+    localStorage.setItem("data", JSON.stringify(this.#items));
+  }
+
+  getLocalStorage() {
+    return JSON.parse(localStorage.getItem("data"));
   }
 }
 
 class App {
-  constructor() {
-    this.store = null;
-    this.api = new Api();
+  constructor(store) {
+    this.store = store;
   }
 
   #listBtnsEventHandler(e) {
@@ -122,93 +149,75 @@ class App {
     );
   }
 
-  #setData(datas) {
-    const store = {
-      todos: [],
-      doings: [],
-      dones: [],
-    };
-    for (const item of datas) {
-      const categ = item.category;
-      if (categ === "todo") {
-        store.todos.push(item);
-      } else if (categ === "doing") {
-        store.doings.push(item);
-      } else if (categ === "done") {
-        store.dones.push(item);
-      }
-    }
-    return store;
-  }
-
   // template: function, data: array
-  #makeHtml(template, datas) {
-    const html = datas.map((data) => template(data.text, data.id));
+  #makeHtml(template, data) {
+    const html = data.map(template);
     return html.join("");
   }
 
   #getHTMLElementData($li) {
     const parseType = (dataset) => {
       const types = {
-        ["todoId"]: "todo",
-        ["doingId"]: "doing",
-        ["doneId"]: "done",
+        ["todoId"]: "todos",
+        ["doingId"]: "doings",
+        ["doneId"]: "dones",
       };
       return types[dataset];
     };
     const dataSet = Object.keys($li.dataset)[0];
     const type = parseType(dataSet);
-    const id = $li.dataset[`${dataSet}`];
+    const id = Number($li.dataset[`${dataSet}`]);
     return { type, id };
   }
 
-  async #addList() {
+  #addList() {
     const newTodo = $("#to-do-form-input").value;
+    // 사용자 행동 예외처리
     if (newTodo === "") {
       return alert("할 일을 입력해 주세요.");
     }
+
     $("#to-do-form-input").value = "";
-    await this.api.createItem(newTodo);
+    this.store.addItem(newTodo);
     return this.#render();
   }
 
-  async #removeList($li) {
-    const { type, id } = this.#getHTMLElementData($li);
+  #removeList($li) {
     if (confirm("삭제할까요?")) {
-      await this.api.deleteItem(type, id);
+      const { type, id } = this.#getHTMLElementData($li);
+      this.store.removeItem(type, id);
       return this.#render();
     }
     return;
   }
 
-  async #moveList($li) {
-    const { type, id } = this.#getHTMLElementData($li);
+  #moveList($li) {
     if (confirm("완료했나요?")) {
-      await this.api.moveItem(type, id);
+      const text = $li.querySelector("span").textContent;
+      const { type, id } = this.#getHTMLElementData($li);
+      this.store.moveItem(type, id, text);
       return this.#render();
     }
     return;
   }
 
-  async #editList($li) {
+  #editList($li) {
     const $span = $li.querySelector("span");
     const prevText = $span.textContent;
     const updatedText = prompt("할 일을 수정할까요?", prevText) || prevText;
-    const { _, id } = this.#getHTMLElementData($li);
-    await this.api.editItem(updatedText, id);
+    const { type, id } = this.#getHTMLElementData($li);
+    this.store.editItem(type, id, updatedText);
     return this.#render();
   }
 
   #renderCount() {
-    $("#todo-count").innerHTML = `${this.store.todos.length} 개`;
-    $("#doing-count").innerHTML = `${this.store.doings.length} 개`;
-    $("#done-count").innerHTML = `${this.store.dones.length} 개`;
+    $("#todo-count").innerHTML = `${this.store.todosLength} 개`;
+    $("#doing-count").innerHTML = `${this.store.doingsLength} 개`;
+    $("#done-count").innerHTML = `${this.store.donesLength} 개`;
   }
 
-  async #render() {
-    const fetchData = await this.api.getItems();
-    this.store = this.#setData(fetchData);
-
+  #render() {
+    this.store.setLocalStorage();
     this.#renderCount();
     $("#list-todos").innerHTML = this.#makeHtml(todoTemplate, this.store.todos);
     $("#list-doings").innerHTML = this.#makeHtml(
@@ -218,15 +227,12 @@ class App {
     $("#list-dones").innerHTML = this.#makeHtml(doneTemplate, this.store.dones);
   }
 
-  async run() {
-    if (!this.store) {
-      const fetchData = await this.api.getItems();
-      this.store = this.#setData(fetchData);
-    }
+  run() {
     this.#initEventListener();
     this.#render();
   }
 }
 
-const app = new App();
+const store = new Store();
+const app = new App(store);
 app.run();
