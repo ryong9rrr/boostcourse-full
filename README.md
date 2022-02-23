@@ -54,7 +54,7 @@
 
 ✔ JSP 대신 nodeJS로 API 서버를 만들어서 사용해보기 위해
 
-✔ Ajax와 비동기 연습을 위해
+✔ 로컬스토리지, ajax 연습을 위해
 
 ✔ TDD 연습을 위해
 
@@ -130,6 +130,10 @@ NodeJS API 서버를 만들고, 만든 API를 이용하여 로컬스토리지 �
         <tr>
             <td style="text-align: center">🤔</td>
             <td><a href="https://www.notion.so/ryong9rrr/b6e56085018f41b1ae5a37c538e07d65">요구 사항 분석</a></td>
+        </tr>
+        <tr>
+            <td style="text-align: center">📋</td>
+            <td><a href="https://www.notion.so/ryong9rrr/API-a34a1582c521441fa1b2bb35ec99aa20">API 설계</a></td>
         </tr>
         <tr>
             <td style="text-align: center">💡</td>
