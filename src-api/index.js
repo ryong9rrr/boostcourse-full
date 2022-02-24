@@ -39,54 +39,92 @@ const doneTemplate = (text, id) => `
   </li>
 `;
 
+const HTTP_METHOD = {
+  POST(text) {
+    return {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    };
+  },
+
+  PUT(text = null) {
+    return {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    };
+  },
+
+  DELETE() {
+    return {
+      method: "DELETE",
+    };
+  },
+};
+
 // api
 class Api {
   constructor() {
     this.BASE_URL = "http://localhost:3000";
   }
 
+  async getRequest(url, option) {
+    try {
+      const response = await fetch(url, option);
+      if (!response.ok) {
+        const message = "서버 요청에 에러가 발생했어요.";
+        console.error(response);
+        throw new Error(message);
+      }
+      return await response;
+    } catch (e) {
+      console.error(e);
+      throw new Error(
+        "현재 서버가 동작하고 있지 않거나 다른 문제가 있는 것 같아요."
+      );
+    }
+  }
+
   async getItems() {
-    const response = await fetch(`${this.BASE_URL}/items`);
-    return response.json();
+    const res = await this.getRequest(`${this.BASE_URL}/items`);
+    return await res.json();
   }
 
   async createItem(text) {
-    const response = await fetch(`${this.BASE_URL}/items`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-    if (!response.ok) console.error("할 일을 추가하는데 에러가 발생했어요.");
-    return response.json();
+    const res = await this.getRequest(
+      `${this.BASE_URL}/items`,
+      HTTP_METHOD.POST(text)
+    );
+    return await res.json();
   }
 
   async editItem(text, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text }),
-    });
-    if (!response.ok) console.error("할 일을 수정하는데 에러가 발생했어요.");
-    return response.json();
+    const res = await this.getRequest(
+      `${this.BASE_URL}/items/${id}`,
+      HTTP_METHOD.PUT(text)
+    );
+    return await res.json();
   }
 
   async moveItem(category, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${category}/${id}`, {
-      method: "PUT",
-    });
-    if (!response.ok) console.error("할 일을 옮기는데 에러가 발생했어요.");
-    return response.json();
+    const res = await this.getRequest(
+      `${this.BASE_URL}/items/${category}/${id}`,
+      HTTP_METHOD.PUT()
+    );
+    return await res.json();
   }
 
   async deleteItem(category, id) {
-    const response = await fetch(`${this.BASE_URL}/items/${category}/${id}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) console.error("할 일을 삭제하는데 에러가 발생했어요.");
+    const res = await this.getRequest(
+      `${this.BASE_URL}/items/${category}/${id}`,
+      HTTP_METHOD.DELETE()
+    );
+    return await res;
   }
 }
 
@@ -219,12 +257,17 @@ class App {
   }
 
   async run() {
-    if (!this.store) {
-      const fetchData = await this.api.getItems();
-      this.store = this.#setData(fetchData);
+    try {
+      if (!this.store) {
+        const fetchData = await this.api.getItems();
+        this.store = this.#setData(fetchData);
+      }
+      this.#initEventListener();
+      this.#render();
+    } catch (e) {
+      console.error(e);
+      return alert(e.message);
     }
-    this.#initEventListener();
-    this.#render();
   }
 }
 
