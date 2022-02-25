@@ -39,7 +39,7 @@
         </tr>
         <tr>
             <td style="text-align: center">keywords</td>
-            <td><strong>Vanilla JS</strong> | <strong>TypeScript</strong> | <strong>TailWind CSS</strong> | <strong>Web API</strong> | <strong>DOM API</strong> | <strong>상태관리</strong> | <strong>로컬스토리지</strong> | <strong>AJAX</strong></td>
+            <td><strong>Vanilla JS</strong> | <strong>TypeScript</strong> | <strong>TailWind CSS</strong> | <strong>Web API</strong> | <strong>DOM API</strong> | <strong>상태관리</strong> | <strong>로컬스토리지</strong> | <strong>AJAX</strong> | <strong>비동기</strong></td>
         </tr>
     </tbody>
 </table>
@@ -137,7 +137,7 @@ NodeJS API 서버를 만들고, 만든 API를 이용하여 로컬스토리지 �
         </tr>
         <tr>
             <td style="text-align: center">💡</td>
-            <td><a href="#">회고</a></td>
+            <td><a href="https://www.notion.so/ryong9rrr/89b1b3d7a4974d40931aa59894b35f85">회고</a></td>
         </tr>
     </tbody>
 </table>
