@@ -1,4 +1,4 @@
-# Vanilla To Do List (진행 중)
+# Vanilla To Do List
 
 과거에 진행했던 <네이버 부스트 코스 - 풀스택 투두리스트 구현하기> 미션을 다시 진행합니다.
 
