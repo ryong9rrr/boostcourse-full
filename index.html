@@ -41,7 +41,7 @@
               <button
                 id="to-do-form-btn-add"
                 class="ml-2 bg-gray-300 w-20 text-lg shadow-md rounded-lg font-bold text-white bg-green-500 hover:bg-green-700"
-                type="button"
+                type="submit"
                 name="submit"
               >
                 확인
@@ -50,27 +50,21 @@
             <div id="to-do-list" class="flex">
               <section class="w-1/3 p-3">
                 <h2 class="text-3xl font-bold text-center">🙋‍♂️ Todo</h2>
-                <h3 id="todo-count" class="text-lg text-right mb-1 pr-1">
-                  0 개
-                </h3>
+                <h3 id="todo-count" class="text-lg text-right mb-1 pr-1">0 개</h3>
                 <ul id="list-todos">
                   <!--todo-template-->
                 </ul>
               </section>
               <section class="w-1/3 p-3">
                 <h2 class="text-3xl font-bold text-center">🏃‍♀️ Doing</h2>
-                <h3 id="doing-count" class="text-lg text-right mb-1 pr-1">
-                  0 개
-                </h3>
+                <h3 id="doing-count" class="text-lg text-right mb-1 pr-1">0 개</h3>
                 <ul id="list-doings">
                   <!--doing-template-->
                 </ul>
               </section>
               <section class="w-1/3 p-3">
                 <h2 class="text-3xl font-bold text-center">🙆‍♂️ Done</h2>
-                <h3 id="done-count" class="text-lg text-right mb-1 pr-1">
-                  0 개
-                </h3>
+                <h3 id="done-count" class="text-lg text-right mb-1 pr-1">0 개</h3>
                 <ul id="list-dones">
                   <!--done-template-->
                 </ul>
@@ -81,5 +75,5 @@
       </div>
     </div>
   </body>
-  <script type="module" src="./src-api/index.ts"></script>
+  <script type="module" src="./src-localstorage/index.ts"></script>
 </html>
